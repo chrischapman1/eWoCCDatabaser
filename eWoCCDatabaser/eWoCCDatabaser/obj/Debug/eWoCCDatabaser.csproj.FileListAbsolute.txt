@@ -1,0 +1,15 @@
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.csprojAssemblyReference.cache
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\eWoCCDatabaser.exe.config
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\eWoCCDatabaser.exe
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\eWoCCDatabaser.pdb
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.GUI.resources
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.Properties.Resources.resources
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.csproj.GenerateResource.cache
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.csproj.CoreCompileInputs.cache
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.exe
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.pdb
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\EntityFramework.dll
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\EntityFramework.xml
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\chris\Documents\University\Semester 1 2019\SENG4811 Final Year Project\INDIV\Code\eWoCCDatabaser\eWoCCDatabaser\obj\Debug\eWoCCDatabaser.csproj.CopyComplete

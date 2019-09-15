@@ -14,6 +14,9 @@ namespace eWoCCDatabaser
             Console.WriteLine("!!! Full Stack !!!");
             Console.WriteLine(e);
             System.Windows.Forms.MessageBox.Show(humanText + " Full stack trace can be found in Console", "eWoCC Databaser: Fatal Error");
+
+            //Probably a bad idea but you get many message boxes otherwise
+            System.Environment.Exit(1);
         }
     }
 }

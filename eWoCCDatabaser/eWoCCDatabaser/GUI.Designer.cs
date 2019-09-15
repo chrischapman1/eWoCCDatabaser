@@ -31,6 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.selectRootFolder = new System.Windows.Forms.Button();
+            this.addEventLogsBox = new System.Windows.Forms.CheckBox();
+            this.addRailNetworkBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -62,11 +64,34 @@
             this.selectRootFolder.UseVisualStyleBackColor = true;
             this.selectRootFolder.Click += new System.EventHandler(this.selectRootFolder_Click);
             // 
+            // addEventLogsBox
+            // 
+            this.addEventLogsBox.AutoSize = true;
+            this.addEventLogsBox.Location = new System.Drawing.Point(16, 168);
+            this.addEventLogsBox.Name = "addEventLogsBox";
+            this.addEventLogsBox.Size = new System.Drawing.Size(148, 24);
+            this.addEventLogsBox.TabIndex = 3;
+            this.addEventLogsBox.Text = "Add Event Logs";
+            this.addEventLogsBox.UseVisualStyleBackColor = true;
+            this.addEventLogsBox.CheckedChanged += new System.EventHandler(this.addEventLogs_CheckedChanged);
+            // 
+            // addRailNetworkBox
+            // 
+            this.addRailNetworkBox.AutoSize = true;
+            this.addRailNetworkBox.Location = new System.Drawing.Point(16, 207);
+            this.addRailNetworkBox.Name = "addRailNetworkBox";
+            this.addRailNetworkBox.Size = new System.Drawing.Size(157, 24);
+            this.addRailNetworkBox.TabIndex = 4;
+            this.addRailNetworkBox.Text = "Add Rail Network";
+            this.addRailNetworkBox.UseVisualStyleBackColor = true;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.addRailNetworkBox);
+            this.Controls.Add(this.addEventLogsBox);
             this.Controls.Add(this.selectRootFolder);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -83,6 +108,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button selectRootFolder;
+        private System.Windows.Forms.CheckBox addEventLogsBox;
+        private System.Windows.Forms.CheckBox addRailNetworkBox;
     }
 }
 

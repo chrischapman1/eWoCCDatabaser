@@ -27,9 +27,9 @@ namespace eWoCCDatabaser
         private MenuItem folderMenuItem, closeMenuItem;
         private FolderBrowserDialog folderBrowserDialog1;
         private string openFileName, folderName;
-        private bool fileOpened = false;
+        private bool fileOpened = false, addEventLogs = false;
         private OpenFileDialog openFileDialog1;
-        private string scenarioNameDate;
+        private static string scenarioNameDate;
 
         private MenuItem fileMenuItem, openMenuItem;
 
@@ -54,20 +54,41 @@ namespace eWoCCDatabaser
 
                 scenarioNameDate = findScenarioInformation(modelInputs.getDataObject().runParameters);
 
-                CSVHelper csvHelper = new CSVHelper();
-                DataTable dt = csvHelper.CSVtoDataTable(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\" + "vesselQ.csv");
+                //CAN REMOVE
+               // DataTable dt = csvHelper.CSVtoDataTable(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\" + "vesselQ.csv");
+                //createDataTableToSQL(dt);
 
-                createDataTableToSQL(dt);
+                //LEAVE
+                //dataTableToSQL(runParameters(modelInputs.getDataObject().runParameters));
 
-               // dataTableToSQL(runParameters(modelInputs.getDataObject().runParameters));
+               
+                String[] eventLogsProcessedOutputTables = getFileNames(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\", ".csv");
+
+                folderToDatabase(eventLogsProcessedOutputTables);
+
 
                 //DataTable dt = addGenericData(modelInputs.getDataObject().channelDistances[0].channelDistance);
 
-               // DataTable dt = runParameters(modelInputs.getDataObject().runParameters);
+                // DataTable dt = runParameters(modelInputs.getDataObject().runParameters);
 
             }
 
         }
+
+        private void folderToDatabase(String[] fileUrls)
+        {
+            foreach (String current in fileUrls)
+            {
+                Console.WriteLine("current " + current);
+                if (current.Contains("csv"))
+                {
+                    CSVHelper csvHelper = new CSVHelper();
+                    createDataTableToSQL(csvHelper.CSVtoDataTable(current));
+                }
+            }
+        }
+
+        //SQL Query Helpers
 
         private void dataTableToSQL(DataTable dt)
         {
@@ -78,14 +99,17 @@ namespace eWoCCDatabaser
         private void createDataTableToSQL(DataTable dt)
         {
             SQLPush sqlPush = new SQLPush();
-            sqlPush.createTableQuery(dt);
+            sqlPush.createTableQuery(dt, true);
             sqlPush.insertToTable(dt);
         }
+
+        //Naming
 
         private string findScenarioInformation(dataRunParameters[] runParameters)
         {
             return runParameters[0].runParameter[0].value + "_" + runParameters[0].runParameter[1].value;
         }
+     
 
         //RunParameters has differing data types, so it must be implemented manually. 
         private DataTable runParameters(dataRunParameters[] runParameters)
@@ -131,6 +155,8 @@ namespace eWoCCDatabaser
             
         }
 
+        
+
         private DataTable addGenericData(Object[] o)
         {
             DataTable dt = new DataTable();
@@ -175,6 +201,27 @@ namespace eWoCCDatabaser
                 return null;
             }
 
+        }
+
+        //GUI Interfacing Methods
+
+        private void addEventLogs_CheckedChanged(object sender, EventArgs e)
+        {
+            addEventLogs = addEventLogsBox.Checked;
+        }
+
+        //Getters and Setters
+
+        public static string getScenarioNameDate()
+        {
+            scenarioNameDate = scenarioNameDate.Replace("/", "");
+            return scenarioNameDate;
+        }
+
+        //Retrieves all of the files from EventLogs folder and sends them to the database. 
+        private String[] getFileNames(String folderLocation, String fileType)
+        {
+            return Directory.GetFiles(folderLocation);
         }
 
     }

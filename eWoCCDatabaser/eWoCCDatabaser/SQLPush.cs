@@ -13,8 +13,20 @@ namespace eWoCCDatabaser
     {
         public SQLPush() { }
 
-        public void createTableQuery(DataTable dataTable)
+        public void createTableQuery(DataTable dataTable, bool dropExisting)
         {
+            Console.WriteLine("drop existing = " + dropExisting + "  check = " + (checkIfDataTableInDataBase(dataTable.TableName)));
+
+            if ((checkIfDataTableInDataBase(dataTable.TableName)))
+            {
+                if (dropExisting)
+                {
+                   //pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
+                }
+            }
+
+            pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
+
             StringBuilder sqlStatement = new StringBuilder();
             sqlStatement.Append("CREATE TABLE " + dataTable.TableName + " ( ");
 
@@ -79,43 +91,65 @@ namespace eWoCCDatabaser
 
         public void insertToTable(DataTable dataTable)
         {
-            StringBuilder sqlStatement = new StringBuilder();
-            sqlStatement.Append("INSERT INTO " + dataTable.TableName + " ( ");
-            for (int k = 0; k < dataTable.Columns.Count; k++)
+            //Checks that there is actually data in the dataTable
+            if (dataTable.Rows.Count > 1)
             {
-                sqlStatement.Append(dataTable.Columns[k].ColumnName);
-                sqlStatement.Append(" ");
-                sqlStatement.Append(", ");
-            }
-            sqlStatement.Remove(sqlStatement.Length - 2, 2);
-            sqlStatement.Append(" )");
-            sqlStatement.Append(" VALUES ");
-            for (int col = 0; col < dataTable.Columns.Count; col++) {
-                sqlStatement.Append(" ( ");
-                
-                for (int row = 0; row < dataTable.Columns.Count; row++)
+                StringBuilder sqlStatement = new StringBuilder();
+                sqlStatement.Append("INSERT INTO " + dataTable.TableName + " ( ");
+                for (int k = 0; k < dataTable.Columns.Count; k++)
                 {
-                    sqlStatement.Append("'");
-
-                    sqlStatement.Append(dataTable.Rows[row].ItemArray[col]);
-                    
-                    sqlStatement.Append("'");
+                    sqlStatement.Append(dataTable.Columns[k].ColumnName);
+                    sqlStatement.Append(" ");
                     sqlStatement.Append(", ");
                 }
                 sqlStatement.Remove(sqlStatement.Length - 2, 2);
-                sqlStatement.Append(" ) ");
+                sqlStatement.Append(" )");
+                sqlStatement.Append(" VALUES ");
+                //(int row = 0; row < dataTable.Rows.Count; row++)
+                for (int row = 0; row < dataTable.Rows.Count; row++)
+                {
+                    sqlStatement.Append(" ( ");
+
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        sqlStatement.Append("'");
+
+                        sqlStatement.Append(dataTable.Rows[row].ItemArray[col]);
+
+                        sqlStatement.Append("'");
+                        sqlStatement.Append(", ");
+                    }
+                    sqlStatement.Remove(sqlStatement.Length - 2, 2);
+                    sqlStatement.Append(" ) ");
+                    sqlStatement.Append(", ");
+                }
+                sqlStatement.Remove(sqlStatement.Length - 2, 2);
+
+                sqlStatement.Append(" ; ");
+                pushToSQL(sqlStatement);
             }
-            pushToSQL(sqlStatement);
+        }
+
+        public SqlConnection getSqlConnection()
+        {
+            String connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\chris\Documents\HVCCC_eWoCC_DB.mdf;Integrated Security=True;Connect Timeout=30;";
+
+            try
+            {
+                return new SqlConnection(connectionString);
+            }
+            catch (Exception e)
+            {
+                ErrorHandling.logError("Can not open connection to database: " + connectionString, e);
+                return null;
+            }
+
         }
 
         public void pushToSQL(StringBuilder query)
         {
-            System.Diagnostics.Debug.WriteLine(query.ToString());
-            String connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\chris\Documents\HVCCC_eWoCC_DB.mdf;Integrated Security=True;Connect Timeout=30;";
-            //String connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=C:\USERS\CHRIS\DOCUMENTS\HVCCC_EWOCC_DB.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             SqlCommand command;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = getSqlConnection())
             {
                 connection.Open();
         
@@ -127,11 +161,42 @@ namespace eWoCCDatabaser
                 }
                 catch (Exception e)
                 {
-                    ErrorHandling.logError("Can not open connection to database: " + connectionString, e);
+                    ErrorHandling.logError("Can not push query to the database: " + query.ToString(), e);
                 }
                 connection.Close();
             }
         
+        }
+
+        public Boolean checkIfDataTableInDataBase(String tableName)
+        {
+            StringBuilder query = new StringBuilder();
+            query.Append("IF OBJECT_ID('");
+            query.Append(tableName);
+            query.Append("') IS NOT NULL");
+            query.Append("	BEGIN PRINT 'true' END ELSE BEGIN PRINT 'false' END");
+
+            Console.WriteLine(query.ToString());
+
+            SqlCommand command;
+            String testString ="";
+            using (SqlConnection connection = getSqlConnection())
+            {
+                connection.Open();
+                command = new SqlCommand(query.ToString(), connection);
+
+                
+                using (var reader = command.ExecuteReader())
+                {
+                    bool myBool;
+                    Console.WriteLine("## " + testString);
+                    Console.WriteLine("BOOLEAN ## " + bool.TryParse(reader.ToString().ToLower(), out myBool));
+                    return Boolean.TryParse(reader.ToString().ToLower(), out myBool);
+                }
+                
+                connection.Close();
+            }
+            return false;
         }
     }
 }

@@ -20,11 +20,11 @@ namespace eWoCCDatabaser
 
             DataTable dt = new DataTable();
             file = file.Replace(".csv", "");
-            int pos = file.LastIndexOf("/") + 1;
-            file = file.Substring(pos, file.Length - pos);
-            Console.WriteLine("FILENAME #### " + file);
-
-            dt.TableName = file;
+            
+            //This retrieves the last word of the URL (EG: the name of the file)
+            file = file.Split((char)92)[file.Split((char)92).Length-1];
+            
+            dt.TableName = file + "_" + GUI.getScenarioNameDate();
 
             foreach (string header in headers)
             {
