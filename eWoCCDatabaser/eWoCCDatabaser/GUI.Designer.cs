@@ -31,8 +31,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.selectRootFolder = new System.Windows.Forms.Button();
-            this.addEventLogsBox = new System.Windows.Forms.CheckBox();
-            this.addRailNetworkBox = new System.Windows.Forms.CheckBox();
+            this.isPlural = new System.Windows.Forms.CheckBox();
+            this.schemaName = new System.Windows.Forms.TextBox();
+            this.schemaSuffix = new System.Windows.Forms.Label();
+            this.modelInputsNames = new System.Windows.Forms.TextBox();
+            this.modelInputsLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -64,34 +67,62 @@
             this.selectRootFolder.UseVisualStyleBackColor = true;
             this.selectRootFolder.Click += new System.EventHandler(this.selectRootFolder_Click);
             // 
-            // addEventLogsBox
+            // isPlural
             // 
-            this.addEventLogsBox.AutoSize = true;
-            this.addEventLogsBox.Location = new System.Drawing.Point(16, 168);
-            this.addEventLogsBox.Name = "addEventLogsBox";
-            this.addEventLogsBox.Size = new System.Drawing.Size(148, 24);
-            this.addEventLogsBox.TabIndex = 3;
-            this.addEventLogsBox.Text = "Add Event Logs";
-            this.addEventLogsBox.UseVisualStyleBackColor = true;
-            this.addEventLogsBox.CheckedChanged += new System.EventHandler(this.addEventLogs_CheckedChanged);
+            this.isPlural.AutoSize = true;
+            this.isPlural.Location = new System.Drawing.Point(16, 161);
+            this.isPlural.Name = "isPlural";
+            this.isPlural.Size = new System.Drawing.Size(91, 24);
+            this.isPlural.TabIndex = 4;
+            this.isPlural.Text = "Is Plural";
+            this.isPlural.UseVisualStyleBackColor = true;
             // 
-            // addRailNetworkBox
+            // schemaName
             // 
-            this.addRailNetworkBox.AutoSize = true;
-            this.addRailNetworkBox.Location = new System.Drawing.Point(16, 207);
-            this.addRailNetworkBox.Name = "addRailNetworkBox";
-            this.addRailNetworkBox.Size = new System.Drawing.Size(157, 24);
-            this.addRailNetworkBox.TabIndex = 4;
-            this.addRailNetworkBox.Text = "Add Rail Network";
-            this.addRailNetworkBox.UseVisualStyleBackColor = true;
+            this.schemaName.Location = new System.Drawing.Point(340, 97);
+            this.schemaName.Name = "schemaName";
+            this.schemaName.Size = new System.Drawing.Size(225, 26);
+            this.schemaName.TabIndex = 5;
+            this.schemaName.Text = "SENG4800Rail1_04122016";
+            this.schemaName.TextChanged += new System.EventHandler(this.schemaName_TextChanged);
+            // 
+            // schemaSuffix
+            // 
+            this.schemaSuffix.AutoSize = true;
+            this.schemaSuffix.Location = new System.Drawing.Point(222, 100);
+            this.schemaSuffix.Name = "schemaSuffix";
+            this.schemaSuffix.Size = new System.Drawing.Size(112, 20);
+            this.schemaSuffix.TabIndex = 6;
+            this.schemaSuffix.Text = "Schema Suffix";
+            // 
+            // modelInputsNames
+            // 
+            this.modelInputsNames.Location = new System.Drawing.Point(340, 165);
+            this.modelInputsNames.Multiline = true;
+            this.modelInputsNames.Name = "modelInputsNames";
+            this.modelInputsNames.Size = new System.Drawing.Size(225, 212);
+            this.modelInputsNames.TabIndex = 8;
+            this.modelInputsNames.Text = "mines, channelTimes";
+            // 
+            // modelInputsLabel
+            // 
+            this.modelInputsLabel.AutoSize = true;
+            this.modelInputsLabel.Location = new System.Drawing.Point(222, 168);
+            this.modelInputsLabel.Name = "modelInputsLabel";
+            this.modelInputsLabel.Size = new System.Drawing.Size(105, 100);
+            this.modelInputsLabel.TabIndex = 9;
+            this.modelInputsLabel.Text = "Model Inputs \r\nto import\r\n\r\nDelimeter is \r\na comma (,)";
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.addRailNetworkBox);
-            this.Controls.Add(this.addEventLogsBox);
+            this.Controls.Add(this.modelInputsLabel);
+            this.Controls.Add(this.modelInputsNames);
+            this.Controls.Add(this.schemaSuffix);
+            this.Controls.Add(this.schemaName);
+            this.Controls.Add(this.isPlural);
             this.Controls.Add(this.selectRootFolder);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -108,8 +139,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button selectRootFolder;
-        private System.Windows.Forms.CheckBox addEventLogsBox;
-        private System.Windows.Forms.CheckBox addRailNetworkBox;
+        private System.Windows.Forms.CheckBox isPlural;
+        private System.Windows.Forms.TextBox schemaName;
+        private System.Windows.Forms.Label schemaSuffix;
+        private System.Windows.Forms.TextBox modelInputsNames;
+        private System.Windows.Forms.Label modelInputsLabel;
     }
 }
 

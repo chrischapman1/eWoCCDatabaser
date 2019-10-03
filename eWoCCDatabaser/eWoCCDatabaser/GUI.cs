@@ -27,16 +27,18 @@ namespace eWoCCDatabaser
         private MenuItem folderMenuItem, closeMenuItem;
         private FolderBrowserDialog folderBrowserDialog1;
         private string openFileName, folderName;
-        private bool fileOpened = false, addEventLogs = false;
+        private bool fileOpened = false, isPlurals = false;
         private OpenFileDialog openFileDialog1;
-        private static string scenarioNameDate;
-
+        private static string scenarioNameDate = "SENG4800Rail1_04122016";
+        private List<DataTable> dataTableList;
         private MenuItem fileMenuItem, openMenuItem;
 
         private void selectRootFolder_Click(object sender, EventArgs e)
         {
+            dataTableList = new List<DataTable>();
             var fileContent = string.Empty;
             var filePath = string.Empty;
+            string itemsToImport = "";
             
             this.folderMenuItem = new System.Windows.Forms.MenuItem();
             this.folderMenuItem.Text = "Select Directory...";
@@ -50,29 +52,48 @@ namespace eWoCCDatabaser
             {
                 folderName = folderBrowserDialog1.SelectedPath;
 
-                XMLHelper modelInputs = new XMLHelper(folderName + "\\" + "_modelInputs.xml");
+                itemsToImport = modelInputsNames.Text;
 
-                scenarioNameDate = findScenarioInformation(modelInputs.getDataObject().runParameters);
+                //Adds all of the modelInputs XML parameters
+                importItems(itemsToImport, folderName);
+                
+                //Adds all of the Event Log CSV files to DataTables and then into the database
+                //TODO: DELETE COMMENTS BELOW
+                //String[] eventLogsProcessedOutputTables = getFileNames(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\", ".csv");
+                //folderToDatabase(eventLogsProcessedOutputTables);
 
-                //CAN REMOVE
-               // DataTable dt = csvHelper.CSVtoDataTable(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\" + "vesselQ.csv");
-                //createDataTableToSQL(dt);
-
-                //LEAVE
-                //dataTableToSQL(runParameters(modelInputs.getDataObject().runParameters));
-
-               
-                String[] eventLogsProcessedOutputTables = getFileNames(folderName + "\\" + "EventLogs" + "\\" + "ProcessedOutput" + "\\" + "Tables" + "\\", ".csv");
-
-                folderToDatabase(eventLogsProcessedOutputTables);
-
-
-                //DataTable dt = addGenericData(modelInputs.getDataObject().channelDistances[0].channelDistance);
-
-                // DataTable dt = runParameters(modelInputs.getDataObject().runParameters);
-
+                
             }
 
+        }
+
+        private void importItems(String itemsToImport, String folderName)
+        {
+            List<string> items = itemsToImport.Split(',').ToList<string>();
+            XMLHelper xmlHelper = new XMLHelper();
+
+            foreach (string current in items)
+            {
+                string searchTerm = "";
+                if (isPlural.Checked)
+                {
+                    searchTerm = current.Replace("s", "");
+                }
+                else
+                {
+                    searchTerm = current;
+                }
+                Console.WriteLine("searchTerm " + searchTerm);
+                DataTable dt = xmlHelper.XMLtoDataTable(folderName + "\\" + "_modelInputs.xml", searchTerm, scenarioNameDate);
+                createDataTableToSQL(dt);
+                dataTableToList(dt);
+            }
+            
+        }
+
+        private void dataTableToList(DataTable dt)
+        {
+            dataTableList.Add(dt);
         }
 
         private void folderToDatabase(String[] fileUrls)
@@ -101,121 +122,17 @@ namespace eWoCCDatabaser
             SQLPush sqlPush = new SQLPush();
             sqlPush.createTableQuery(dt, true);
             sqlPush.insertToTable(dt);
-        }
+        }     
 
-        //Naming
-
-        private string findScenarioInformation(dataRunParameters[] runParameters)
+        private void schemaName_TextChanged(object sender, EventArgs e)
         {
-            return runParameters[0].runParameter[0].value + "_" + runParameters[0].runParameter[1].value;
-        }
-     
-
-        //RunParameters has differing data types, so it must be implemented manually. 
-        private DataTable runParameters(dataRunParameters[] runParameters)
-        {
-            try
-            {
-                DataTable dt = new DataTable();
-                dt.TableName = "RunParameters" + "_" + scenarioNameDate.Replace("/","");
-
-                dt.Columns.Add(runParameters[0].runParameter[0].name, typeof(String)); //scenarioID
-                dt.Columns.Add(runParameters[0].runParameter[1].name, typeof(String)); //runStartDate --> not date time?
-                dt.Columns.Add(runParameters[0].runParameter[2].name, typeof(Boolean)); //endOnDemandComplete
-
-                //All of type Integer
-                for (int i = 3; i <= 6; i++)
-                {
-                    dt.Columns.Add(runParameters[0].runParameter[i].name, typeof(Int32));
-                }
-
-                //All of type 
-                for (int i = 7; i < 12; i++)
-                {
-                    dt.Columns.Add(runParameters[0].runParameter[i].name, typeof(Boolean));
-                }
-
-
-                //Adds data to rows
-                DataRow row = dt.NewRow();
-
-                for (int i = 0; i < 12; i++)
-                {
-                    row[runParameters[0].runParameter[i].name] = Helpers.stringToBit(runParameters[0].runParameter[i].value);
-                }
-
-                dt.Rows.Add(row);
-                return dt;
-            }
-            catch (Exception e)
-            {
-                ErrorHandling.logError("Your run parameters are not set up correctly, have you added or removed any?" , e);
-                return null;
-            }
-            
-        }
-
-        
-
-        private DataTable addGenericData(Object[] o)
-        {
-            DataTable dt = new DataTable();
-            dt.TableName = o.GetType() + "_" + scenarioNameDate.Replace("/", "");
-
-            for (int count = 0; count < o.Length; count++)
-            {
-                dt.Columns.Add(o.ToString(), typeof(String));
-            }
-            for (int count = 0; count < o.Length; count++)
-            {
-
-            }
-
-            return dt;
-        }
-
-        //Interface for Data with only boolean inputs 
-        private static DataTable dataTableBoolean<T>(T xmlData) where T : IXMLDataBoolean
-        {
-            try
-            {
-                DataTable dt = new DataTable();
-               // dt.TableName = "RunParameters" + "_" + GUI.scenarioNameDate.Replace("/", "");
-
-               // dt.Columns.Add(runParameters[0].runParameter[0].name, typeof(String)); //scenarioID
-                
-                //Adds data to rows
-                DataRow row = dt.NewRow();
-
-                for (int i = 0; i < 12; i++)
-                {
-                //    row[runParameters[0].runParameter[i].name] = Helpers.stringToBit(runParameters[0].runParameter[i].value);
-                }
-
-                dt.Rows.Add(row);
-                return dt;
-            }
-            catch (Exception e)
-            {
-                ErrorHandling.logError("Your run parameters are not set up correctly, have you added or removed any?", e);
-                return null;
-            }
-
+            scenarioNameDate = schemaName.Text;
         }
 
         //GUI Interfacing Methods
-
-        private void addEventLogs_CheckedChanged(object sender, EventArgs e)
+        private void isPlural_CheckedChanged(object sender, EventArgs e)
         {
-            addEventLogs = addEventLogsBox.Checked;
-        }
-
-        //Getters and Setters
-
-        public static string getScenarioNameDate()
-        {
-            scenarioNameDate = scenarioNameDate.Replace("/", "");
-            return scenarioNameDate;
+            isPlurals = isPlural.Checked;
         }
 
         //Retrieves all of the files from EventLogs folder and sends them to the database. 
@@ -224,5 +141,15 @@ namespace eWoCCDatabaser
             return Directory.GetFiles(folderLocation);
         }
 
+        public static String getScenarioNameDate()
+        {
+            return scenarioNameDate;
+        }
+
+        private DataTable mergeTwoDataTables(DataTable tableOne, DataTable tableTwo)
+        {
+            //return tableOne.Merge(tableTwo, false, MissingSchemaAction.Add);
+            return null;
+        }
     }
 }

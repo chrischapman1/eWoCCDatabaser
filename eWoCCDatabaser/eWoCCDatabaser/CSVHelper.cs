@@ -15,7 +15,16 @@ namespace eWoCCDatabaser
         //Sourced from: https://immortalcoder.blogspot.com/2013/12/convert-csv-file-to-datatable-in-c.html
         public DataTable CSVtoDataTable(String file)
         {
-            StreamReader sr = new StreamReader(file);
+            StreamReader sr = null;
+            try
+            {
+                sr = new StreamReader(file);
+            }
+            catch (IOException e)
+            {
+                ErrorHandling.logError("Please ensure all files are closed before importing", e);
+            }
+
             string[] headers = sr.ReadLine().Split(',');
 
             DataTable dt = new DataTable();
@@ -28,7 +37,7 @@ namespace eWoCCDatabaser
 
             foreach (string header in headers)
             {
-                dt.Columns.Add(header);
+                dt.Columns.Add(header.Replace(" ", ""));
             }
             while (!sr.EndOfStream)
             {

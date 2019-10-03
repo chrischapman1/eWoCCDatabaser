@@ -21,11 +21,9 @@ namespace eWoCCDatabaser
             {
                 if (dropExisting)
                 {
-                   //pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
+                   pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
                 }
             }
-
-            pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
 
             StringBuilder sqlStatement = new StringBuilder();
             sqlStatement.Append("CREATE TABLE " + dataTable.TableName + " ( ");
@@ -171,30 +169,30 @@ namespace eWoCCDatabaser
         public Boolean checkIfDataTableInDataBase(String tableName)
         {
             StringBuilder query = new StringBuilder();
-            query.Append("IF OBJECT_ID('");
+            query.Append("SELECT * FROM sys.tables WHERE [name]='");
             query.Append(tableName);
-            query.Append("') IS NOT NULL");
-            query.Append("	BEGIN PRINT 'true' END ELSE BEGIN PRINT 'false' END");
-
+            query.Append("';");
+            
             Console.WriteLine(query.ToString());
 
             SqlCommand command;
             String testString ="";
+
             using (SqlConnection connection = getSqlConnection())
             {
                 connection.Open();
                 command = new SqlCommand(query.ToString(), connection);
 
-                
-                using (var reader = command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    bool myBool;
-                    Console.WriteLine("## " + testString);
-                    Console.WriteLine("BOOLEAN ## " + bool.TryParse(reader.ToString().ToLower(), out myBool));
-                    return Boolean.TryParse(reader.ToString().ToLower(), out myBool);
+                    while (reader.Read())
+                    {
+                        if (reader["name"].ToString() == null)
+                            return false;
+                        else
+                            return true;
+                    }
                 }
-                
-                connection.Close();
             }
             return false;
         }
