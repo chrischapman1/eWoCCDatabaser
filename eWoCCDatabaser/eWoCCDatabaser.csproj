@@ -57,6 +57,7 @@
     <Compile Include="CSVHelper.cs" />
     <Compile Include="CSVReader.cs" />
     <Compile Include="ErrorHandling.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +83,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

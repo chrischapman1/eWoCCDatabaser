@@ -31,11 +31,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.selectRootFolder = new System.Windows.Forms.Button();
-            this.isPlural = new System.Windows.Forms.CheckBox();
+            this.addEventLogs = new System.Windows.Forms.CheckBox();
             this.schemaName = new System.Windows.Forms.TextBox();
             this.schemaSuffix = new System.Windows.Forms.Label();
             this.modelInputsNames = new System.Windows.Forms.TextBox();
             this.modelInputsLabel = new System.Windows.Forms.Label();
+            this.mergeData = new System.Windows.Forms.TextBox();
+            this.mergeLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -67,15 +69,15 @@
             this.selectRootFolder.UseVisualStyleBackColor = true;
             this.selectRootFolder.Click += new System.EventHandler(this.selectRootFolder_Click);
             // 
-            // isPlural
+            // addEventLogs
             // 
-            this.isPlural.AutoSize = true;
-            this.isPlural.Location = new System.Drawing.Point(16, 161);
-            this.isPlural.Name = "isPlural";
-            this.isPlural.Size = new System.Drawing.Size(91, 24);
-            this.isPlural.TabIndex = 4;
-            this.isPlural.Text = "Is Plural";
-            this.isPlural.UseVisualStyleBackColor = true;
+            this.addEventLogs.AutoSize = true;
+            this.addEventLogs.Location = new System.Drawing.Point(16, 161);
+            this.addEventLogs.Name = "addEventLogs";
+            this.addEventLogs.Size = new System.Drawing.Size(148, 24);
+            this.addEventLogs.TabIndex = 4;
+            this.addEventLogs.Text = "Add Event Logs";
+            this.addEventLogs.UseVisualStyleBackColor = true;
             // 
             // schemaName
             // 
@@ -89,7 +91,7 @@
             // schemaSuffix
             // 
             this.schemaSuffix.AutoSize = true;
-            this.schemaSuffix.Location = new System.Drawing.Point(222, 100);
+            this.schemaSuffix.Location = new System.Drawing.Point(187, 97);
             this.schemaSuffix.Name = "schemaSuffix";
             this.schemaSuffix.Size = new System.Drawing.Size(112, 20);
             this.schemaSuffix.TabIndex = 6;
@@ -102,26 +104,48 @@
             this.modelInputsNames.Name = "modelInputsNames";
             this.modelInputsNames.Size = new System.Drawing.Size(225, 212);
             this.modelInputsNames.TabIndex = 8;
+            this.modelInputsNames.Text = "runParameter, logSwitch";
             // 
             // modelInputsLabel
             // 
             this.modelInputsLabel.AutoSize = true;
-            this.modelInputsLabel.Location = new System.Drawing.Point(222, 168);
+            this.modelInputsLabel.Location = new System.Drawing.Point(187, 168);
             this.modelInputsLabel.Name = "modelInputsLabel";
-            this.modelInputsLabel.Size = new System.Drawing.Size(105, 40);
+            this.modelInputsLabel.Size = new System.Drawing.Size(136, 120);
             this.modelInputsLabel.TabIndex = 9;
-            this.modelInputsLabel.Text = "Model Inputs \r\nto import";
+            this.modelInputsLabel.Text = "Model Inputs \r\nto import\r\n\r\nDelimeter is \r\na comma followed\r\nby a space (, )";
+            // 
+            // mergeData
+            // 
+            this.mergeData.Location = new System.Drawing.Point(657, 165);
+            this.mergeData.Multiline = true;
+            this.mergeData.Name = "mergeData";
+            this.mergeData.Size = new System.Drawing.Size(225, 212);
+            this.mergeData.TabIndex = 10;
+            this.mergeData.Text = "runParameter, logSwitch";
+            // 
+            // mergeLabel
+            // 
+            this.mergeLabel.AutoSize = true;
+            this.mergeLabel.Location = new System.Drawing.Point(653, 73);
+            this.mergeLabel.Name = "mergeLabel";
+            this.mergeLabel.Size = new System.Drawing.Size(329, 80);
+            this.mergeLabel.TabIndex = 11;
+            this.mergeLabel.Text = "Post processing data to merge\r\n\r\nDelimeter is a comma followed by a space (, ) \r\n" +
+    "for pairs\r\n";
             // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1019, 450);
+            this.Controls.Add(this.mergeLabel);
+            this.Controls.Add(this.mergeData);
             this.Controls.Add(this.modelInputsLabel);
             this.Controls.Add(this.modelInputsNames);
             this.Controls.Add(this.schemaSuffix);
             this.Controls.Add(this.schemaName);
-            this.Controls.Add(this.isPlural);
+            this.Controls.Add(this.addEventLogs);
             this.Controls.Add(this.selectRootFolder);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -138,11 +162,13 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button selectRootFolder;
-        private System.Windows.Forms.CheckBox isPlural;
+        private System.Windows.Forms.CheckBox addEventLogs;
         private System.Windows.Forms.TextBox schemaName;
         private System.Windows.Forms.Label schemaSuffix;
         private System.Windows.Forms.TextBox modelInputsNames;
         private System.Windows.Forms.Label modelInputsLabel;
+        private System.Windows.Forms.TextBox mergeData;
+        private System.Windows.Forms.Label mergeLabel;
     }
 }
 

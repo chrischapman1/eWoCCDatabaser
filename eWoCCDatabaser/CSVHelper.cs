@@ -35,19 +35,26 @@ namespace eWoCCDatabaser
             
             dt.TableName = file + "_" + GUI.getScenarioNameDate();
 
-            foreach (string header in headers)
-            {
-                dt.Columns.Add(header.Replace(" ", ""));
-            }
-            while (!sr.EndOfStream)
-            {
-                string[] rows = Regex.Split(sr.ReadLine(), ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-                DataRow dr = dt.NewRow();
-                for (int i = 0; i < headers.Length; i++)
+            try { 
+                foreach (string header in headers)
                 {
-                    dr[i] = rows[i];
+                    dt.Columns.Add(header.Replace(" ", ""));
                 }
-                dt.Rows.Add(dr);
+                while (!sr.EndOfStream)
+                {
+                    string[] rows = Regex.Split(sr.ReadLine(), ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = rows[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+                
+            }
+            catch (IOException e)
+            {
+                ErrorHandling.logError("Error reading CSV files", e);
             }
             return dt;
         }
