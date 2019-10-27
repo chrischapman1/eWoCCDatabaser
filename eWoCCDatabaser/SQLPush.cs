@@ -15,15 +15,28 @@ namespace eWoCCDatabaser
 
         public void createTableQuery(DataTable dataTable, bool dropExisting)
         {
-            //Checks if the datatable is already in the database and drops the existing table if necessary
-            if ((checkIfDataTableInDataBase(dataTable.TableName)))
+            if (dataTable == null)
             {
-                if (dropExisting)
-                {
-                   pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
-                }
+                ErrorHandling.logError("Table inserted was not found", new Exception("InvalidOperationException"));
+
             }
 
+            try
+                {
+                //Checks if the datatable is already in the database and drops the existing table if necessary
+                if ((checkIfDataTableInDataBase(dataTable.TableName)))
+                {
+                    if (dropExisting)
+                    {
+                        pushToSQL(new StringBuilder("DROP TABLE " + dataTable.TableName));
+                    }
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine("Could not query the database for the table");
+            }
+            
             StringBuilder sqlStatement = new StringBuilder();
             sqlStatement.Append("CREATE TABLE " + dataTable.TableName + " ( ");
 
@@ -94,6 +107,7 @@ namespace eWoCCDatabaser
             pushToSQL(sqlStatement);
         }
 
+        //Begins to insert data from a dataTable. Checks for size to split tables. 
         public void insertToTable(DataTable dataTable)
         {
             //Avoids SQL exception: The number of row value expressions in the INSERT statement exceeds the maximum allowed number of 1000 row values.
@@ -103,16 +117,35 @@ namespace eWoCCDatabaser
                 //Splits into groups of 500 to insert into SQL
                 int numberToInsert = (int) Math.Ceiling(count / 500);
 
+                //List of the sub-tables
                 var tables = dataTable.AsEnumerable().ToChunks(numberToInsert).Select(rows => rows.CopyToDataTable());
+
+                //Iterates through and inserts them
                 foreach (var table in tables)
                 {
                     table.TableName = dataTable.TableName;
-                    insertToTable(table);
+                    if (table.Rows.Count <= 1000)
+                    {
+                        insertToTableHelper(table);
+                    }
+                    else
+                    {
+                        insertToTable(table);
+                    }
                 }
             }
+            else
+            {
+                insertToTableHelper(dataTable);
+            }
             
+        }
+
+        //Actually inserts the data into the MS SQL format
+        private void insertToTableHelper(DataTable dataTable)
+        {
             //Checks that there is actually data in the dataTable
-            if (dataTable.Rows.Count > 1)
+            if ((dataTable.Rows.Count > 1) && (dataTable.Rows.Count < 1000))
             {
                 StringBuilder sqlStatement = new StringBuilder();
                 sqlStatement.Append("INSERT INTO " + dataTable.TableName + " ( ");
@@ -125,12 +158,13 @@ namespace eWoCCDatabaser
                 sqlStatement.Remove(sqlStatement.Length - 2, 2);
                 sqlStatement.Append(" )");
                 sqlStatement.Append(" VALUES ");
-                
-                //Iterates through teh values to be inserted
+
+                //Iterates through the values to be inserted of each row
                 for (int row = 0; row < dataTable.Rows.Count; row++)
                 {
                     sqlStatement.Append(" ( ");
 
+                    //Iterates through each column
                     for (int col = 0; col < dataTable.Columns.Count; col++)
                     {
                         sqlStatement.Append("'");
@@ -225,7 +259,8 @@ namespace eWoCCDatabaser
             }
             catch (Exception e)
             {
-                ErrorHandling.logError("Can query database to check if " + tableName + "exists", e);
+                ErrorHandling.logError("Can not query database to check if " + tableName + "exists", e);
+                return false;
             }
             return false;
         }

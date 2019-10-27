@@ -65,8 +65,16 @@ namespace eWoCCDatabaser
                     folderToDatabase(eventLogsProcessedOutputTables);
                     
                 }
-                postProcess();
+
                 System.Windows.Forms.MessageBox.Show("Completed processing. Added " + dataTableList.Count + " tables.");
+
+                if (!(String.IsNullOrEmpty(mergeData.Text)))
+                {
+                    postProcess();
+                    System.Windows.Forms.MessageBox.Show("Completed post processing. Added " + postProcessingNames.Count + " tables.");
+                }
+                
+                
             }
 
         }
@@ -100,6 +108,19 @@ namespace eWoCCDatabaser
         private void dataTableToList(DataTable dt)
         {
             dataTableList.Add(dt);
+        }
+
+        //Iterates through a list of data tables and gets the desired one. Use in postprocessing.
+        private DataTable getDataTable(String name)
+        {
+            foreach (DataTable dt in dataTableList)
+            {
+                if (dt.TableName.Contains(name))
+                {
+                    return dt;
+                }
+            }
+            return new DataTable();
         }
 
         //Creates the contents of csv in a folder into a database
@@ -141,8 +162,21 @@ namespace eWoCCDatabaser
         private void getPostProcessingNames()
         {
             String text = mergeData.Text;
-            text.Replace(" ", "");
-            postProcessingNames = text.Split(',').ToList();
+            if (text.Contains(","))
+            {
+                text.Replace(" ", "");
+                postProcessingNames = text.Split(',').ToList();
+            }
+        }
+
+        private string getPostProcessingNamesString()
+        {
+            string current = "";
+            foreach (string name in postProcessingNames)
+            {
+                current = current + ", ";
+            }
+            return current;
         }
 
         //GUI Interfacing Methods
@@ -167,10 +201,9 @@ namespace eWoCCDatabaser
         private DataTable mergeTwoDataTables(DataTable tableOne, DataTable tableTwo)
         {
             tableOne.TableName = tableOne.TableName.Substring(0, tableOne.TableName.IndexOf("_")) +
-                                tableOne.TableName.Substring(0, tableOne.TableName.IndexOf("_")) +
+                                tableTwo.TableName.Substring(0, tableTwo.TableName.IndexOf("_")) +
                                 "_" + getScenarioNameDate();
             tableOne.Merge(tableTwo, false, MissingSchemaAction.Ignore);
-            Console.WriteLine(tableOne.TableName);
             return tableOne;
         }
 
@@ -178,20 +211,23 @@ namespace eWoCCDatabaser
         private void postProcess()
         {
             getPostProcessingNames();
+            Console.WriteLine(" Begin post processing with " + getPostProcessingNamesString() + " and " + dataTableList.ToString());
+
+            int length = postProcessingNames.Count;
+
             try
             {
-                foreach (String current in postProcessingNames)
+                int i = 0;
+                for (i = 0; i < length - 1; i++)
                 {
-                    foreach (DataTable dt in dataTableList)
+                    DataTable dtOne = getDataTable(postProcessingNames[i]);
+                    DataTable dtTwo = getDataTable(postProcessingNames[i + 1]);
+                    if (dtOne.Columns.Count == dtTwo.Columns.Count)
                     {
-                        if (current.Contains("_"))
-                        {
-                            //Removes the schema suffix
-                            if ((dt.TableName.Substring(0, dt.TableName.IndexOf("_"))).Equals(current))
-                            {
-                                createDataTableToSQL(mergeTwoDataTables(dt, findDataTable(current)));
-                            }
-                        }
+                        createDataTableToSQL(mergeTwoDataTables(dtOne, dtTwo));
+                        System.Windows.Forms.MessageBox.Show("Post Processing: Created the new table with " + dtOne.TableName + " and " + dtTwo.TableName);
+
+
                     }
                 }
             }
@@ -199,20 +235,6 @@ namespace eWoCCDatabaser
             {
                 ErrorHandling.logError("Could not find post processing data table. Do all of these tables " + postProcessingNames.ToString() + " exist?", e);
             }
-        }
-
-        //Queries the list of datatables and finds the name of the current one
-        private DataTable findDataTable(String current)
-        {
-            foreach (DataTable dt in dataTableList)
-            {
-                //Removes the schema suffix
-                if ((dt.TableName.Substring(0, dt.TableName.IndexOf("_"))).Equals(current))
-                {
-                    return dt;
-                }
-            }
-            return null;
         }
     }
 }

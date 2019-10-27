@@ -25,9 +25,9 @@ public class XMLHelper{
             //Recursion is too expensive
             try
             {
-                return (DataTable)XMLtoDataTableHelper(data, dataType , scenarioName);
+                //return (DataTable)XMLtoDataTableHelper(data, dataType , scenarioName);
                 //Wrong condition
-                if (data.Count == 1)
+                if (data.Descendants().Count() <= 0)
                 {
                     return (DataTable)XMLtoDataTableHelper(data, dataType , scenarioName);
                 }

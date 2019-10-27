@@ -104,7 +104,7 @@
             this.modelInputsNames.Name = "modelInputsNames";
             this.modelInputsNames.Size = new System.Drawing.Size(225, 212);
             this.modelInputsNames.TabIndex = 8;
-            this.modelInputsNames.Text = "runParameter, logSwitch";
+            this.modelInputsNames.Text = "runParameter,logSwitch";
             // 
             // modelInputsLabel
             // 
@@ -122,7 +122,7 @@
             this.mergeData.Name = "mergeData";
             this.mergeData.Size = new System.Drawing.Size(225, 212);
             this.mergeData.TabIndex = 10;
-            this.mergeData.Text = "runParameter, logSwitch";
+            this.mergeData.Text = "runParameter,logSwitch";
             // 
             // mergeLabel
             // 
