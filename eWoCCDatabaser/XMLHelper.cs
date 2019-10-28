@@ -53,35 +53,52 @@ public class XMLHelper{
         throw new NotImplementedException();
     }
 
+    /**Class: XMLtoDataTableOneChild
+     * Purpose: Gets a XML data that has a single child and concatenates the data into one table with all of the information for the parent and child.
+     * Input: <cargo brandName="WATERMARK">
+     *          <component mineId="Bloomfield" loadpointId="BF" tonnes="8600"/>
+     *        </cargo>
+     * Output: cargo_SENG4800Rail1 table
+     *  -------------------------------------------------
+     *  | mineId     | loadpointId | tonnes | brandName |
+     *  -------------------------------------------------
+     *  | Bloomfield | BF          | 8600   | WATERMARK |
+     *  -------------------------------------------------           
+    */
     private DataTable XMLtoDataTableOneChild(IEnumerable<XElement> data, String name, String scenarioName)
     {
+        //Creates new DataTables (temporary for each child and a parent to add children's data to)
         DataTable table = new DataTable();
         DataTable tempTable = new DataTable();
+
+        //Adds table name
         table.TableName = name + "_" + scenarioName;
 
-        //Gets the data for each of the parent ID. Note: Only takes the first value which is normally the id. 
+        //Gets the data for each of the parent and puts it into a list. 
         XAttribute attribute = data.First().Attributes().First();
-        String currentCol = attribute.Name.ToString();
-        String currentVal = attribute.Value.ToString();
+        List<XAttribute> list = data.First().Attributes().ToList();
 
-        for (int i=0; i < data.Count(); i++)
+        for (int i = 0; i < data.Count(); i++)
         {
             //Gets the XML name of the child element
             String childXMLName = data.First().FirstNode.ToString();
             var start = childXMLName.IndexOf("<") + 1;
             childXMLName = childXMLName.Substring(start, childXMLName.IndexOf(" ") - start);
 
-            //Gets the name of the current child table id
-            currentVal = data.ElementAt(i).Attributes().First().Value;
-            
             //Begins a temp table that will later be merged
             tempTable = XMLtoDataTableHelper(data.Elements(childXMLName), name + "_" + i, scenarioName);
-            tempTable.Columns.Add(currentCol);
-            //for each node, add the corresponding id to the table. 
-            foreach (DataRow row in tempTable.Rows) 
+
+            foreach (XAttribute currentAttribute in list)
             {
-                row[currentCol] = currentVal;
+                tempTable.Columns.Add(currentAttribute.Name.ToString());
+
+                //for each node, add the corresponding attributes to the new table (child table) 
+                foreach (DataRow row in tempTable.Rows)
+                {
+                    row[currentAttribute.Name.ToString()] = currentAttribute.Value.ToString();
+                }
             }
+
             //Merges temp table (containing child data) to the parent table
             table.Merge(tempTable);
             tempTable = null;
