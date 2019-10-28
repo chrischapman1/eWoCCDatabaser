@@ -13,7 +13,7 @@ Thank you to [Dr. Karen Blackmore](https://www.newcastle.edu.au/profile/karen-bl
 
 Thank you to HVCCCC representatives [Riley Clement](https://au.linkedin.com/in/rileyclement) and [Martin Jackson](https://au.linkedin.com/in/martin-jackson-80773829) for their input. 
 
-Client: (Hunter Valley Coal Chain Coordinator)[https://www.hvccc.com.au/] 
+Client: [Hunter Valley Coal Chain Coordinator](https://www.hvccc.com.au/) 
 
 ## How to run the program
 1. Download the repository
